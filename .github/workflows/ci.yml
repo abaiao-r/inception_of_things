@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ShellCheck all scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          ignore_paths: '.git'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML manifests
+        run: |
+          files=$(find . -type f \( -name '*.yaml' -o -name '*.yml' \) -not -path './.git/*')
+          if [ -z "$files" ]; then
+            echo "No YAML files to lint yet"
+            exit 0
+          fi
+          yamllint -d "{extends: default, rules: {line-length: disable, document-start: disable}}" $files

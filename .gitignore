@@ -1,0 +1,32 @@
+### Vagrant ###
+.vagrant/
+*.box
+
+### Kubernetes / kubeconfig ###
+kubeconfig
+kubeconfig.yaml
+*.kubeconfig
+k3s.yaml
+
+### Terraform (if used) ###
+.terraform/
+*.tfstate
+*.tfstate.*
+
+### Secrets / env ###
+.env
+*.pem
+*.key
+secrets/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Editor ###
+.vscode/
+.idea/
+*.swp
+
+### Logs ###
+*.log
