@@ -48,6 +48,11 @@ Per subject requirements, each part lives in its own folder at the repo root:
 - **Bonus**: Local GitLab integrated with the Part 3 cluster in a `gitlab`
   namespace (only evaluated if the mandatory part is fully working).
 
+## New to Kubernetes/Vagrant/GitOps?
+
+Start with [docs/BEGINNERS_GUIDE.md](docs/BEGINNERS_GUIDE.md) — a plain-English
+walkthrough of every concept and requirement in this project, with diagrams.
+
 ## Working agreement
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for branch protection rules, PR
