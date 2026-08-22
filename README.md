@@ -3,6 +3,8 @@
 42 System Administration project: hands-on introduction to Kubernetes using
 `Vagrant`, `K3s`, `K3d` and `Argo CD`.
 
+> Check the [Wiki](https://github.com/abaiao-r/inception_of_things/wiki) if you want to know more.
+
 ## Team
 
 | Login | Role |
