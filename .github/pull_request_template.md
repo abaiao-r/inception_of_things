@@ -1,3 +1,7 @@
+## Issue
+
+Closes #<!-- issue number this PR resolves -->
+
 ## Summary
 
 <!-- What does this PR do? Which part (p1/p2/p3/bonus)? -->
