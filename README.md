@@ -37,6 +37,79 @@ The current implementation starts with the Part 1 Vagrant environment:
 
 - `en.subject.pdf` — original subject document.
 
+## Host setup
+
+Install the tools on your host machine before running any part.
+
+### Linux
+
+Debian/Ubuntu base packages:
+
+```bash
+sudo apt update
+sudo apt install -y git curl ca-certificates gnupg
+```
+
+Part 1 needs Vagrant and VirtualBox:
+
+```bash
+sudo apt install -y vagrant virtualbox
+```
+
+Later parts use Docker, `kubectl`, `k3d` and the Argo CD CLI. Prefer the
+official repositories/installers for these tools:
+
+- Docker Engine: <https://docs.docker.com/engine/install/>
+- kubectl: <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
+- k3d: <https://k3d.io/>
+- Argo CD CLI: <https://argo-cd.readthedocs.io/en/stable/cli_installation/>
+
+After installing Docker, allow your user to run it without `sudo`:
+
+```bash
+sudo usermod -aG docker "$USER"
+newgrp docker
+```
+
+### macOS
+
+Install Homebrew if it is missing:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Part 1 needs Vagrant and VirtualBox:
+
+```bash
+brew install --cask virtualbox vagrant
+```
+
+Later parts use Docker, `kubectl`, `k3d` and the Argo CD CLI:
+
+```bash
+brew install --cask docker
+brew install kubectl k3d argocd
+```
+
+Open Docker Desktop once after installation so the Docker daemon starts.
+
+Apple Silicon note: this Part 1 Vagrantfile uses VirtualBox with
+`debian/bookworm64`, an amd64 box. Use a Linux host or Intel Mac for the most
+reliable setup unless the Vagrant provider/box is updated for arm64.
+
+### Quick check
+
+```bash
+git --version
+vagrant --version
+VBoxManage --version
+docker --version
+kubectl version --client
+k3d version
+argocd version --client
+```
+
 ## Part 1: Vagrant VMs
 
 `p1/Vagrantfile` defines two Debian Bookworm VMs with VirtualBox:
