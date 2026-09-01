@@ -22,6 +22,7 @@ The current implementation starts with the Part 1 Vagrant environment:
 ├── p1/           # Part 1: Vagrant baseline for 2 Debian VMs
 │   ├── Vagrantfile
 │   ├── scripts/
+│   │   └── setup_server.sh
 │   └── confs/
 ├── p2/           # Part 2: K3s and three simple applications (Ingress)
 │   ├── Vagrantfile
@@ -110,7 +111,7 @@ k3d version
 argocd version --client
 ```
 
-## Part 1: Vagrant VMs
+## Part 1: Vagrant + K3s Server
 
 `p1/Vagrantfile` defines two Debian Bookworm VMs with VirtualBox:
 
@@ -118,6 +119,12 @@ argocd version --client
 |----|----------|------------|-----|--------|
 | Server | `pedgoncaS` | `192.168.56.110` | 1 | 512 MB |
 | Worker | `pedgoncaSW` | `192.168.56.111` | 1 | 512 MB |
+
+The server VM runs `p1/scripts/setup_server.sh` during provisioning. It:
+
+- installs `curl`
+- installs K3s as the server
+- copies the K3s node token to `p1/k3s-node-token`
 
 Start the environment:
 
@@ -130,13 +137,22 @@ Useful commands:
 
 ```bash
 vagrant status
+vagrant provision pedgoncaS
 vagrant ssh pedgoncaS
 vagrant ssh pedgoncaSW
 vagrant destroy -f
 ```
 
-This is the VM foundation for Part 1. K3s installation scripts and cluster
-configuration belong under `p1/scripts/` and `p1/confs/`.
+Check K3s on the server:
+
+```bash
+vagrant ssh pedgoncaS
+sudo kubectl get nodes
+```
+
+`p1/k3s-node-token` is generated locally and ignored by Git. It is kept in the
+shared Vagrant folder so the worker VM can join the cluster in the next setup
+step.
 
 ## Subject targets
 
@@ -159,5 +175,5 @@ process and commit conventions used by this team.
 
 ## Status
 
-Part 1 now has a reproducible Vagrant baseline for the server and worker VMs.
-K3s provisioning is the next step.
+Part 1 has a reproducible Vagrant baseline and automatic K3s server
+provisioning. Worker node provisioning is the next step.
