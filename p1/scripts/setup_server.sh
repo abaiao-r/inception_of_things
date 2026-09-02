@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export DEBIAN_FRONTEND=noninteractive	# prevents access to stdin that give errors
 
 sudo apt-get update -y
