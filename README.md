@@ -1,6 +1,6 @@
 # Inception-of-Things (IoT)
 
-42 System Administration project: hands-on introduction to Kubernetes using
+42 System Administration project: hands-on introduction to Kubernetes with
 `Vagrant`, `K3s`, `K3d` and `Argo CD`.
 
 > Check the [Wiki](https://github.com/abaiao-r/inception_of_things/wiki) if you want to know more.
@@ -10,15 +10,16 @@
 | Login | Role |
 |-------|------|
 | abaiao-r | |
-| _colleague_ | |
+| pedgonca | |
 
 ## Project structure
 
-Per subject requirements, each part lives in its own folder at the repo root:
+Per subject requirements, each part lives in its own folder at the repo root.
+The current implementation starts with the Part 1 Vagrant environment:
 
 ```
 .
-├── p1/           # Part 1: K3s and Vagrant (2 VMs, server + agent)
+├── p1/           # Part 1: Vagrant baseline for 2 Debian VMs
 │   ├── Vagrantfile
 │   ├── scripts/
 │   └── confs/
@@ -36,7 +37,108 @@ Per subject requirements, each part lives in its own folder at the repo root:
 
 - `en.subject.pdf` — original subject document.
 
-## Requirements summary
+## Host setup
+
+Install the tools on your host machine before running any part.
+
+### Linux
+
+Debian/Ubuntu base packages:
+
+```bash
+sudo apt update
+sudo apt install -y git curl ca-certificates gnupg
+```
+
+Part 1 needs Vagrant and VirtualBox:
+
+```bash
+sudo apt install -y vagrant virtualbox
+```
+
+Later parts use Docker, `kubectl`, `k3d` and the Argo CD CLI. Prefer the
+official repositories/installers for these tools:
+
+- Docker Engine: <https://docs.docker.com/engine/install/>
+- kubectl: <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
+- k3d: <https://k3d.io/>
+- Argo CD CLI: <https://argo-cd.readthedocs.io/en/stable/cli_installation/>
+
+After installing Docker, allow your user to run it without `sudo`:
+
+```bash
+sudo usermod -aG docker "$USER"
+newgrp docker
+```
+
+### macOS
+
+Install Homebrew if it is missing:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Part 1 needs Vagrant and VirtualBox:
+
+```bash
+brew install --cask virtualbox vagrant
+```
+
+Later parts use Docker, `kubectl`, `k3d` and the Argo CD CLI:
+
+```bash
+brew install --cask docker
+brew install kubectl k3d argocd
+```
+
+Open Docker Desktop once after installation so the Docker daemon starts.
+
+Apple Silicon note: this Part 1 Vagrantfile uses VirtualBox with
+`debian/bookworm64`, an amd64 box. Use a Linux host or Intel Mac for the most
+reliable setup unless the Vagrant provider/box is updated for arm64.
+
+### Quick check
+
+```bash
+git --version
+vagrant --version
+VBoxManage --version
+docker --version
+kubectl version --client
+k3d version
+argocd version --client
+```
+
+## Part 1: Vagrant VMs
+
+`p1/Vagrantfile` defines two Debian Bookworm VMs with VirtualBox:
+
+| VM | Hostname | Private IP | CPU | Memory |
+|----|----------|------------|-----|--------|
+| Server | `pedgoncaS` | `192.168.56.110` | 1 | 512 MB |
+| Worker | `pedgoncaSW` | `192.168.56.111` | 1 | 512 MB |
+
+Start the environment:
+
+```bash
+cd p1
+vagrant up
+```
+
+Useful commands:
+
+```bash
+vagrant status
+vagrant ssh pedgoncaS
+vagrant ssh pedgoncaSW
+vagrant destroy -f
+```
+
+This is the VM foundation for Part 1. K3s installation scripts and cluster
+configuration belong under `p1/scripts/` and `p1/confs/`.
+
+## Subject targets
 
 - **Part 1**: Two VMs via Vagrant (`<login>S` controller, `<login>SW` agent),
   static IPs `192.168.56.110` / `.111`, passwordless SSH, K3s server on the
@@ -57,5 +159,5 @@ process and commit conventions used by this team.
 
 ## Status
 
-Setup in progress — implementation of p1/p2/p3/bonus to be discussed and
-tracked via issues/PRs.
+Part 1 now has a reproducible Vagrant baseline for the server and worker VMs.
+K3s provisioning is the next step.
