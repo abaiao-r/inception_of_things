@@ -117,7 +117,7 @@ argocd version --client
 
 | VM | Hostname | Private IP | CPU | Memory |
 |----|----------|------------|-----|--------|
-| Server | `pedgoncaS` | `192.168.56.110` | 1 | 512 MB |
+| Server | `pedgoncaS` | `192.168.56.110` | 1 | 1024 MB |
 | Worker | `pedgoncaSW` | `192.168.56.111` | 1 | 512 MB |
 
 The server VM runs `p1/scripts/setup_server.sh` during provisioning. It:
@@ -125,6 +125,14 @@ The server VM runs `p1/scripts/setup_server.sh` during provisioning. It:
 - installs `curl`
 - installs K3s as the server
 - copies the K3s node token to `p1/k3s-node-token`
+
+The worker VM runs `p1/scripts/setup_agent.sh` during provisioning. It:
+
+- installs `curl`
+- waits for `p1/k3s-node-token` to be published by the server (shared via the
+  `/vagrant` synced folder)
+- installs K3s as an agent, joining the server at `https://192.168.56.110:6443`
+  with that token
 
 Start the environment:
 
@@ -143,16 +151,20 @@ vagrant ssh pedgoncaSW
 vagrant destroy -f
 ```
 
-Check K3s on the server:
+Check both nodes joined the cluster (run from the server, `kubectl` is only
+installed there):
 
 ```bash
 vagrant ssh pedgoncaS
 sudo kubectl get nodes
 ```
 
+You should see `pedgoncaS` (`Ready,control-plane,master`) and `pedgoncaSW`
+(`Ready`).
+
 `p1/k3s-node-token` is generated locally and ignored by Git. It is kept in the
-shared Vagrant folder so the worker VM can join the cluster in the next setup
-step.
+shared Vagrant folder so the worker VM can read it and join the cluster during
+its own provisioning.
 
 ## Subject targets
 
@@ -175,5 +187,5 @@ process and commit conventions used by this team.
 
 ## Status
 
-Part 1 has a reproducible Vagrant baseline and automatic K3s server
-provisioning. Worker node provisioning is the next step.
+Part 1 has a reproducible Vagrant baseline with automatic K3s server and agent
+provisioning; the worker joins the cluster on `vagrant up`.

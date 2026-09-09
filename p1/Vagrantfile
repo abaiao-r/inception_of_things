@@ -27,6 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			v.memory = 512
 		end
 		server_worker.vm.network "private_network", ip: "192.168.56.111"
+		server_worker.vm.provision "shell", path: "./scripts/setup_agent.sh"
 	end
 
 end
