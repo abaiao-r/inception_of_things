@@ -1,0 +1,22 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	config.vm.box = "debian/bookworm64"
+	config.vm.box_version = "12.20250126.1"
+	config.vm.box_url = "https://vagrantcloud.com/api/v2/vagrant/debian/bookworm64"
+
+	config.vm.provider "virtualbox" do |v|
+		v.customize ["modifyvm", :id, "--cpus", "1"]
+		v.memory = 1024
+		v.gui = false
+	end
+
+	config.vm.define "pedgoncaS" do |server|
+		server.vm.hostname = "pedgoncaS"
+		server.vm.provider "virtualbox" do |v|
+			v.name = "pedgoncaS"
+		end
+		server.vm.network "private_network", ip: "192.168.56.110"
+		server.vm.provision "shell", path: "./scripts/setup.sh"
+	end
+end
