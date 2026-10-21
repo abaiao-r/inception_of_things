@@ -19,4 +19,5 @@ until sudo kubectl get nodes 2>/dev/null | grep -q " Ready"; do
 	sleep 1
 	waited=$((waited + 1))
 done
-sudo kubectl apply -f /vagrant/confs/	# deploy apps as part of provisioning, not a manual test step
+sudo kubectl apply -f /vagrant/confs/	# deploy apps
+sudo kubectl port-forward svc/app1 8080:80
