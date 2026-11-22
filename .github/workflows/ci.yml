@@ -69,3 +69,8 @@ jobs:
             exit 0
           fi
           kubeconform -strict -summary $files
+
+      - name: Validate p2
+        working-directory: ./p2
+        shell: bash
+        run: bash ./test_p2.sh

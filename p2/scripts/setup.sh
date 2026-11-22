@@ -18,6 +18,12 @@ until sudo kubectl get nodes 2>/dev/null | grep -q " Ready"; do
 	fi
 	sleep 1
 	waited=$((waited + 1))
-done
+done 
+
 sudo kubectl apply -f /vagrant/confs/	# deploy apps
-sudo kubectl port-forward svc/app1 8080:80
+
+sudo kubectl rollout status deployment/app1 --timeout=200s
+
+sudo kubectl rollout status deployment/app2 --timeout=200s
+
+echo "All deployments are READY"
