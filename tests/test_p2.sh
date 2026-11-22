@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-vagrant up
+cd "$(dirname "$0")/../p2"
 
-cd "$(dirname "$0")"
+vagrant up
 
 vagrant ssh -c 'bash -s' <<'EOF'
 set -euo pipefail
