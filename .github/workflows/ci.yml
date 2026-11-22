@@ -71,6 +71,6 @@ jobs:
           kubeconform -strict -summary $files
 
       - name: Validate p2
-        working-directory: ./p2
+        working-directory: ./tests
         shell: bash
         run: bash ./test_p2.sh
